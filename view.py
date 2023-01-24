@@ -90,6 +90,21 @@ class LancerLeTournois:
 
         self.lancer_le_tournois = input("souhaitez-vous lancer le tournois ? (o/n) : ")
 
+class DonnerLesResultatsDunTour: 
+    "demander à l'utilisateur qui a gagné"
+    def __init__(self,paire) -> None:
+        resultat_du_tour = []
+        self.resultat_joueur_un_de_la_paire = input("Pouvez-vous indiquer le résultat du joueur n°1 (W/L/D) : ")
+
+        if self.resultat_joueur_un_de_la_paire == "D":
+            self.resultat_joueur_deux_de_la_paire = "D"
+        else:
+            self.resultat_joueur_deux_de_la_paire = input("Pouvez-vous indiquer le résultat du joueur n°2 (W/L) : ")
+        
+        resultat_du_tour.append(self.resultat_joueur_un_de_la_paire)
+        resultat_du_tour.append(self.resultat_joueur_deux_de_la_paire)
+
+        self.resultat_des_joueurs_sur_le_tour = resultat_du_tour
 class DonneesDuTournois: 
 
     def __init__(self) -> None:

@@ -41,33 +41,17 @@ class Tours :
     def __init__(self,tours = 4) -> None:
         self.nombre_de_tours = tours
 
-"""
-class Tours_tt:
-    #déroulement de tous les tours
-    def __init__(self,joueurs_enregistrés, nombre_de_tours = 4):
 
-        liste_des_tours = {}
-        self.nombre_de_tours = nombre_de_tours
-        for tours in range(nombre_de_tours-1):
-            if tours < 1:
-                Paires_du_tour = CreationPairesJoueurs(joueurs_enregistrés)
-            else:
-
-                classement_joueurs = ClassementJoueurs(joueurs_enregistrés).classement_tour
-                Paires_du_tour = CreationPairesJoueurs(classement_joueurs).paires
-                Match = Matchs(Paires_du_tour, joueurs_enregistrés)
-                liste_des_tours["Round N°" + str(tours)] = Paires_du_tour, classement_joueurs
-
-        self.resultat_final = classement_joueurs
-        print(liste_des_tours)
-""" 
 class ClassementJoueurs: 
 
     def __init__(self, joueurs_enregistres: dict):
         
         cLassement_dict = sorted(joueurs_enregistres, key=lambda x: (joueurs_enregistres[x]["score"]), reverse=True)
-        
-        self.classement_tour = cLassement_dict
+        classement_et_score = {}
+        for joueurs in cLassement_dict: 
+            classement_et_score[joueurs] = joueurs_enregistres[joueurs]["score"]
+
+        self.classement_tour = classement_et_score
         
 
 class CreationPairesJoueurs: 
@@ -98,38 +82,29 @@ class CreationPairesJoueurs:
     
 class Matchs:
     """Définition des classements finaux (tant qu'il n'y a pas de view + stockage des résultats des matchs"""
-    def __init__(self,liste_paires, joueurs_enregistres):
+    def __init__(self,liste_paires, joueurs_enregistres, resultat_du_tour):
 
         stockage_des_resultats= []
         joueur_un = []
         joueur_deux =[]
-        score_possible = ["W", "L", "D"]
-     
+        
+        joueurs_enregistres[liste_paires[0]]["resultatM"] = resultat_du_tour[0]
+        joueurs_enregistres[liste_paires[1]]["resultatM"] = resultat_du_tour[1]
+            
 
-        for j in range(len(liste_paires)):
-            random.shuffle(score_possible)
-            joueurs_enregistres[liste_paires["Paire N°" + str(j)][0]]["resultatM"] = score_possible[0]
+        for i in range(2):
 
-            if joueurs_enregistres[liste_paires["Paire N°" + str(j) ][0]]["resultatM"] == "D":
-                joueurs_enregistres[liste_paires["Paire N°" + str(j) ][1]]["resultatM"] = score_possible [0] 
-            elif score_possible[1] != "D": 
-                joueurs_enregistres[liste_paires["Paire N°" + str(j) ][1]]["resultatM"] = score_possible [1] 
-            else:
-                joueurs_enregistres[liste_paires["Paire N°" + str(j) ][1]]["resultatM"] = score_possible [2]
-
-            for i in range(2):
-
-                if joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["resultatM"] == "W":
-                    joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] = joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] + 1
-                elif joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["resultatM"] == "L":
-                    joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] = joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] + 0
-                else: 
-                    joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] = joueurs_enregistres[liste_paires["Paire N°" + str(j) ][i]]["score"] + 0.5
+            if joueurs_enregistres[liste_paires[i]]["resultatM"] == "W":
+                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 1
+            elif joueurs_enregistres[liste_paires[i]]["resultatM"] == "L":
+                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 0
+            else: 
+                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 0.5
 
 
-        for j in range(len(liste_paires)):
-            joueur_un = [liste_paires["Paire N°" + str(j) ][0]], [joueurs_enregistres[liste_paires["Paire N°" + str(j) ][0]]["score"] ]
-            joueur_deux = [liste_paires["Paire N°" + str(j) ][1]], [joueurs_enregistres[liste_paires["Paire N°" + str(j) ][1]]["score"] ]
+        
+            joueur_un = [liste_paires[0]], [joueurs_enregistres[liste_paires[0]]["score"] ]
+            joueur_deux = [liste_paires[1]], [joueurs_enregistres[liste_paires[1]]["score"] ]
 
             joueur_et_score =(joueur_un, joueur_deux )
             stockage_des_resultats.append(joueur_et_score)
