@@ -2,6 +2,7 @@ import json
 import random
 
 class Joueurs:
+    "récupération des données des joueurs et création des joueurs"
 
     def __init__(self,fichier: json):
 
@@ -33,7 +34,7 @@ class Joueurs:
         self.joueurs = dict_joueurs
     
 class Tours:
-
+    """déroulement de tous les tours"""
     def __init__(self,joueurs_enregistrés, nombre_de_tours = 4):
 
         liste_des_tours = {}
@@ -61,7 +62,7 @@ class ClassementJoueurs:
         
 
 class CreationPairesJoueurs: 
-
+    "creation des paires pour les matchs"
     def __init__(self, joueurs):
 
         liste_joueurs =[]
