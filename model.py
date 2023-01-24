@@ -1,7 +1,10 @@
+import controler
 import json
 import random
 
 class Joueurs:
+
+
     "récupération des données des joueurs et création des joueurs"
 
     def __init__(self,fichier: json):
@@ -31,10 +34,16 @@ class Joueurs:
 
                 }
             dict_joueurs["joueur N°" + str(j)] = dict_infos_joueurs
-        self.joueurs = dict_joueurs
+        self.joueurs_vf = dict_joueurs
     
-class Tours:
-    """déroulement de tous les tours"""
+class Tours : 
+    "selection du nombre de tours"
+    def __init__(self,tours = 4) -> None:
+        self.nombre_de_tours = tours
+
+"""
+class Tours_tt:
+    #déroulement de tous les tours
     def __init__(self,joueurs_enregistrés, nombre_de_tours = 4):
 
         liste_des_tours = {}
@@ -51,7 +60,7 @@ class Tours:
 
         self.resultat_final = classement_joueurs
         print(liste_des_tours)
-    
+""" 
 class ClassementJoueurs: 
 
     def __init__(self, joueurs_enregistres: dict):
@@ -64,7 +73,7 @@ class ClassementJoueurs:
 class CreationPairesJoueurs: 
     "creation des paires pour les matchs"
     def __init__(self, joueurs):
-
+        
         liste_joueurs =[]
 
         if type(joueurs) == dict : 
@@ -95,7 +104,6 @@ class Matchs:
         joueur_un = []
         joueur_deux =[]
         score_possible = ["W", "L", "D"]
-        
      
 
         for j in range(len(liste_paires)):
@@ -130,26 +138,28 @@ class Matchs:
     
 class Tournois: 
 
-    def __init__(self, nom, lieu, date_debut, date_fin , numero_tour_actuel, liste_des_tours, liste_joueurs_enregistres, remarques_directeur, nombre_de_tours=4):
+    def __init__(self):
         
-        self.nom = nom 
-        self.lieu = lieu
-        self.date_debut = date_debut
-        self.date_fin= date_fin
-        self.numero_tour_actuel = numero_tour_actuel
-        self.liste_des_tours = liste_des_tours
-        self.liste_joueurs_enregistres = liste_joueurs_enregistres
-        self.remarque_directeur = remarques_directeur
-        self.nombre_de_tours = nombre_de_tours
+
+        self.nom = controler.PreparationDuTournois().creer_un_tournois.nom 
+        self.lieu = controler.PreparationDuTournois().creer_un_tournois.lieu
+        self.date_debut = controler.PreparationDuTournois().creer_un_tournois.date_debut
+        self.date_fin= controler.PreparationDuTournois().creer_un_tournois.date_fin
+        self.numero_tour_actuel = controler.PreparationDuTournois().creer_un_tournois.numero_tour_actuel
+        self.liste_des_tours = controler.PreparationDuTournois().creer_un_tournois.liste_des_tours
+        self.liste_joueurs_enregistres = controler.PreparationDuTournois().creer_un_tournois.liste_joueurs_enregistres
+        self.remarque_directeur = controler.PreparationDuTournois().creer_un_tournois.remarque_directeur
+        self.nombre_de_tours = controler.PreparationDuTournois().creer_un_tournois.nombre_de_tours
 
 
+"""
 joueurs = Joueurs("joueurs.json").joueurs
 #paires = CreationPairesJoueurs(joueurs).paires
 #tuples_matchs = Matchs(paires,joueurs).tuples_match
 #classement_des_joueurs = ClassementJoueurs(joueurs)
 tours = Tours(joueurs, 6).resultat_final
 print(tours)
-
+"""
 
 
 
