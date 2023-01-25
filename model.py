@@ -56,7 +56,7 @@ class ClassementJoueurs:
 
 class CreationPairesJoueurs: 
     "creation des paires pour les matchs"
-    def __init__(self, joueurs):
+    def __init__(self, joueurs, tours, liste_des_round):
         
         liste_joueurs =[]
 
@@ -72,10 +72,42 @@ class CreationPairesJoueurs:
         les_paires = {}
         c = 0
 
-        for i in range(int(len(liste_joueurs)/2)) :
-            for j in range(1):
-                les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
-                c = c+2
+        if tours == 1:
+            for i in range(int(len(liste_joueurs)/2)) :
+                for j in range(1):
+                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
+                    c = c+2
+        else:
+            for i in range(int(len(liste_joueurs)/2)) :
+                c = 0
+                for j in range(1):
+                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
+                    k = 0 
+                    for round in range(len(liste_des_round)) : 
+                        for paire in range (int(len(joueurs)/2)):
+                            nombre_de_paire_identique = 0
+                            if les_paires["Paire N°" + str(i)] == liste_des_round["Round N°" + str(round+1)][0]["Paire N°" + str(paire)] :
+                                nombre_de_paire_identique = nombre_de_paire_identique +1
+                                if nombre_de_paire_identique > 0 and len(liste_joueurs) > 2 :
+                                    k = k +1
+                                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1+k]
+                                    round = 0
+                                    paire = 0
+
+                index_du_premier_joueur = liste_joueurs.index(les_paires["Paire N°" + str(i)][0])
+                print(liste_joueurs)
+                del liste_joueurs[index_du_premier_joueur]
+                print(liste_joueurs)
+                index_du_second_joueur = liste_joueurs.index(les_paires["Paire N°" + str(i)][1])
+                del liste_joueurs[index_du_second_joueur]
+                print(liste_joueurs)
+                                   
+
+
+                    
+
+        
+
         
         self.paires= les_paires  
         
