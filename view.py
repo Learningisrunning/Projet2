@@ -58,8 +58,9 @@ class CreerUnTournois:
 
             nouveau_tournoi = {
 
+                "nom_du_tournois" : self.nom,
                 "lieu_du_tournois" : self.lieu,
-                "date_de_debut_du_tournois " : self.date_debut,
+                "date_de_debut_du_tournois" : self.date_debut,
                 "date_de_fin_du_tournois" : self.date_fin,
                 "numero_tour_actuel" : self.numero_tour_actuel,
                 "liste_des_tours" : self.liste_des_tours,
@@ -72,7 +73,7 @@ class CreerUnTournois:
             
             Tournois_dict[self.nom] = nouveau_tournoi
             
-            
+            self.tournois_cree = nouveau_tournoi
 
             with open(fichier, "r") as fichier_json: 
                 dict_initial_tournois =json.load(fichier_json)

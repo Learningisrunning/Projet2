@@ -1,6 +1,6 @@
 import controler
 import json
-import random
+import time
 
 class Joueurs:
 
@@ -113,18 +113,52 @@ class Matchs:
     
 class Tournois: 
 
-    def __init__(self):
+    def __init__(self, fichier, tour_actuel, liste_des_tours, liste_des_joueurs_enregistree, nom_du_tournois ):
         
+        self.numero_tour_actuel = tour_actuel
+        self.liste_des_tours = liste_des_tours
+        self.liste_joueurs_enregistres = liste_des_joueurs_enregistree
 
-        self.nom = controler.PreparationDuTournois().creer_un_tournois.nom 
-        self.lieu = controler.PreparationDuTournois().creer_un_tournois.lieu
-        self.date_debut = controler.PreparationDuTournois().creer_un_tournois.date_debut
-        self.date_fin= controler.PreparationDuTournois().creer_un_tournois.date_fin
-        self.numero_tour_actuel = controler.PreparationDuTournois().creer_un_tournois.numero_tour_actuel
-        self.liste_des_tours = controler.PreparationDuTournois().creer_un_tournois.liste_des_tours
-        self.liste_joueurs_enregistres = controler.PreparationDuTournois().creer_un_tournois.liste_joueurs_enregistres
-        self.remarque_directeur = controler.PreparationDuTournois().creer_un_tournois.remarque_directeur
-        self.nombre_de_tours = controler.PreparationDuTournois().creer_un_tournois.nombre_de_tours
+        if  self.numero_tour_actuel == 0 :
+            self.date_debut = time.strftime("%Y-%m-%d %H:%M:%S")
+
+            with open(fichier, "r") as fichier_json:
+                fichier_infos_tournoi = json.load(fichier_json)
+
+            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["liste_des_joueurs_enregistres"] = liste_des_joueurs_enregistree
+            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["date_de_debut_du_tournois"] = self.date_debut
+        
+            with open(fichier, "w") as fichier_json: 
+                json.dump(fichier_infos_tournoi, fichier_json, indent=4)
+
+        with open(fichier, "r") as fichier_json:
+                fichier_infos_tournoi = json.load(fichier_json)
+
+        if int(fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["nombre_de_tours"]) == self.numero_tour_actuel :
+
+            self.date_fin= time.strftime("%Y-%m-%d %H:%M:%S")
+
+            with open(fichier, "r") as fichier_json:
+                fichier_infos_tournoi = json.load(fichier_json)
+
+            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["liste_des_tours"] = self.liste_des_tours
+            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["date_de_fin_du_tournois"] = self.date_fin
+
+            with open(fichier, "w") as fichier_json: 
+                json.dump(fichier_infos_tournoi, fichier_json, indent=4)
+
+
+        with open(fichier, "r") as fichier_json:
+                fichier_infos_tournoi = json.load(fichier_json)
+
+        fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["numero_tour_actuel"] = self.numero_tour_actuel
+
+        with open(fichier, "w") as fichier_json: 
+            json.dump(fichier_infos_tournoi, fichier_json, indent=4)
+            
+
+
+        
 
 
 """
