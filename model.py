@@ -88,7 +88,7 @@ class CreationPairesJoueurs:
                             nombre_de_paire_identique = 0
                             if les_paires["Paire N°" + str(i)] == liste_des_round["Round N°" + str(round+1)][0]["Paire N°" + str(paire)] :
                                 nombre_de_paire_identique = nombre_de_paire_identique +1
-                                if nombre_de_paire_identique > 0 and len(liste_joueurs) > 2 :
+                                if nombre_de_paire_identique > 0 and len(liste_joueurs) > 2 and k+1>len(liste_joueurs) :
                                     k = k +1
                                     les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1+k]
                                     round = 0
