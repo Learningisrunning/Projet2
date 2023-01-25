@@ -1,4 +1,5 @@
 import json
+import pprint
 Tournois_dict = {}
 
 class AjouterUnJoueur:
@@ -111,7 +112,15 @@ class DonnerLesResultatsDunTour:
         self.resultat_des_joueurs_sur_le_tour = resultat_du_tour
 class DonneesDuTournois: 
 
-    def __init__(self) -> None:
+    def __init__(self, fichier, nom_du_tournoi) -> None:
         self.charger_les_donnees = input("Souhaitez-vous charger les données du tournois ? (o/n) : ")
+
+        if self.charger_les_donnees == "o":
+             with open(fichier, "r") as fichier_json: 
+                donnee_a_linstant_t = json.load(fichier_json)
+
+             pprint.pprint(donnee_a_linstant_t["Tournois"][-1][nom_du_tournoi])
+
+        
 
 

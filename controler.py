@@ -3,6 +3,7 @@ import view
 import model
 
 
+
 class LancerLeProgramme :
     def __init__(self) -> None:
 
@@ -42,6 +43,7 @@ class LancerLeProgramme :
         
                     liste_des_tours["Round N°" + str(tours)]= Paire_du_tour, classement_joueurs
                 model.Tournois("tournois.json", tours, liste_des_tours, Liste_des_joueurs_du_tournois, Recuperation_donnees_du_tournois["nom_du_tournois"])
+                view.DonneesDuTournois("tournois.json",Recuperation_donnees_du_tournois["nom_du_tournois"])
 
             self.resultat_final = classement_joueurs
             print(self.resultat_final)
