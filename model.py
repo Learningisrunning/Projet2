@@ -1,6 +1,6 @@
-import controler
 import json
 import time
+import random
 
 class Joueurs:
 
@@ -33,7 +33,7 @@ class Joueurs:
                 "resultatM" : self.resultatM
 
                 }
-            dict_joueurs["joueur N°" + str(j)] = dict_infos_joueurs
+            dict_joueurs[self.prenom +"." + self.nom_de_famille[0]] = dict_infos_joueurs
         self.joueurs_vf = dict_joueurs
     
 class Tours : 
@@ -43,7 +43,7 @@ class Tours :
 
 
 class ClassementJoueurs: 
-
+    "Classer les joueurs en fonction de leur score"
     def __init__(self, joueurs_enregistres: dict):
         
         cLassement_dict = sorted(joueurs_enregistres, key=lambda x: (joueurs_enregistres[x]["score"]), reverse=True)
@@ -68,11 +68,13 @@ class CreationPairesJoueurs:
                 liste_joueurs.append(key)
         else:
             liste_joueurs = joueurs
-
+        
         les_paires = {}
         c = 0
 
         if tours == 1:
+
+            random.shuffle(liste_joueurs)
             for i in range(int(len(liste_joueurs)/2)) :
                 for j in range(1):
                     les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
@@ -86,7 +88,7 @@ class CreationPairesJoueurs:
                     for round in range(len(liste_des_round)) : 
                         for paire in range (int(len(joueurs)/2)):
                             nombre_de_paire_identique = 0
-                            if les_paires["Paire N°" + str(i)] == liste_des_round["Round N°" + str(round+1)][0]["Paire N°" + str(paire)] :
+                            if les_paires["Paire N°" + str(i)] == liste_des_round["Round N°" + str(round+1)][2]["Paire N°" + str(paire)] :
                                 nombre_de_paire_identique = nombre_de_paire_identique +1
                                 if nombre_de_paire_identique > 0 and len(liste_joueurs) > 2 and k+1>len(liste_joueurs) :
                                     k = k +1
@@ -101,13 +103,7 @@ class CreationPairesJoueurs:
                 index_du_second_joueur = liste_joueurs.index(les_paires["Paire N°" + str(i)][1])
                 del liste_joueurs[index_du_second_joueur]
                 print(liste_joueurs)
-                                   
-
-
-                    
-
-        
-
+                                         
         
         self.paires= les_paires  
         
@@ -116,6 +112,7 @@ class Matchs:
     """Définition des classements finaux (tant qu'il n'y a pas de view + stockage des résultats des matchs"""
     def __init__(self,liste_paires, joueurs_enregistres, resultat_du_tour):
 
+        
         stockage_des_resultats= []
         joueur_un = []
         joueur_deux =[]
@@ -133,13 +130,15 @@ class Matchs:
             else: 
                 joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 0.5
 
-
         
-            joueur_un = [liste_paires[0]], [joueurs_enregistres[liste_paires[0]]["score"] ]
-            joueur_deux = [liste_paires[1]], [joueurs_enregistres[liste_paires[1]]["score"] ]
+        joueur_un = [liste_paires[0]], [joueurs_enregistres[liste_paires[0]]["score"] ]
+        joueur_deux = [liste_paires[1]], [joueurs_enregistres[liste_paires[1]]["score"] ]
+       
 
-            joueur_et_score =(joueur_un, joueur_deux )
-            stockage_des_resultats.append(joueur_et_score)
+
+        joueur_et_score =(joueur_un, joueur_deux)
+        stockage_des_resultats.append(joueur_et_score)
+        
 
         self.tuples_match = stockage_des_resultats
     

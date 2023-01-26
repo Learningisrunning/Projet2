@@ -1,6 +1,7 @@
 import json
 import view 
 import model
+import time
 
 
 
@@ -21,6 +22,7 @@ class LancerLeProgramme :
             model.Tournois("tournois.json", 0, " ", Liste_des_joueurs_du_tournois, Recuperation_donnees_du_tournois["nom_du_tournois"])
             liste_des_tours = {}
             for tours in range(int(nombre_de_tours)):
+                self.date_debut_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
                 tours = tours +1
                 print("debut du tours N°" + str(tours))
                 if tours == 1:
@@ -31,7 +33,8 @@ class LancerLeProgramme :
                         match = model.Matchs(Paire_du_tour["Paire N°" + str(nombre_de_paires)], Liste_des_joueurs_du_tournois, resultat_du_tour)
 
                     classement_joueurs = model.ClassementJoueurs(Liste_des_joueurs_du_tournois).classement_tour
-                    liste_des_tours["Round N°" + str(tours)]= Paire_du_tour, classement_joueurs
+                    self.date_fin_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
+                    liste_des_tours["Round N°" + str(tours)]= self.date_debut_de_tour, self.date_fin_de_tour, Paire_du_tour, classement_joueurs
                 else: 
 
                     classement_joueurs = model.ClassementJoueurs(Liste_des_joueurs_du_tournois).classement_tour
@@ -41,9 +44,11 @@ class LancerLeProgramme :
                         resultat_du_tour = view.DonnerLesResultatsDunTour(Paire_du_tour["Paire N°" + str(nombre_de_paires)], nombre_de_paires ).resultat_des_joueurs_sur_le_tour
                         match = model.Matchs(Paire_du_tour["Paire N°" + str(nombre_de_paires)], Liste_des_joueurs_du_tournois, resultat_du_tour)
         
-                    liste_des_tours["Round N°" + str(tours)]= Paire_du_tour, classement_joueurs
+                    self.date_fin_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
+                    liste_des_tours["Round N°" + str(tours)]= self.date_debut_de_tour, self.date_fin_de_tour, Paire_du_tour, classement_joueurs
                 model.Tournois("tournois.json", tours, liste_des_tours, Liste_des_joueurs_du_tournois, Recuperation_donnees_du_tournois["nom_du_tournois"])
                 view.DonneesDuTournois("tournois.json",Recuperation_donnees_du_tournois["nom_du_tournois"])
+
 
             self.resultat_final = classement_joueurs
             print(self.resultat_final)
