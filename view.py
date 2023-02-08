@@ -3,13 +3,16 @@ import pprint
 Tournois_dict = {}
 
 class AjouterUnJoueur:
-    def __init__(self, fichier : json) -> None:
-        
-        
+
+    def volonte_dajouter_un_joueur(self):
 
         self.ajouterunjoueur = input("voulez-vous ajouter un joueur ? (n/o)")
 
-        if self.ajouterunjoueur == "n":
+        return self.ajouterunjoueur
+
+    def recuperation_infos_nouveau_joueur(self, ajouter_un_joueur) -> None:
+
+        if  ajouter_un_joueur == "n":
             print("aucun joueur ne sera ajouter à la liste précédement fournis")
         else: 
             self.nom = input("Nom du joueur :")
@@ -17,7 +20,7 @@ class AjouterUnJoueur:
             self.date_de_naissance = input("Date de naissance du joueur : ")
             self.identifiant_national_dechec = input("identifiant national d'echec du joueur :")
 
-            nouveau_joueur= {
+        nouveau_joueur= {
 
                 "nom_de_famille" : self.nom,
                 "prenom" : self.prenom,
@@ -25,21 +28,10 @@ class AjouterUnJoueur:
                 "identifiant_national_dechec" : self.identifiant_national_dechec
 
             }
-
-           
-            with open(fichier, "r") as fichier_json: 
-                dict_initial_joueurs =json.load(fichier_json)
-
-            dict_initial_joueurs["Joueurs"].append(nouveau_joueur)
-            print(dict_initial_joueurs)
-
-            with open(fichier, "w") as fichier_json: 
-                json.dump(dict_initial_joueurs, fichier_json, indent=4)
-
-            print("le joueur " + self.nom +" "+ self.prenom + " né le " + self.date_de_naissance + " qui a pour identifiant national " + self.identifiant_national_dechec + " à bien été ajouté")
+        return nouveau_joueur
 
 class CreerUnTournois:
-    def __init__(self, fichier) -> None:
+    def recuperation_info_nouveau_tournois(self) -> None:
         self.creer_un_tournois = input("Souhaitez-vous créer un tournois ? (o/n) : ")
 
         if self.creer_un_tournois == "n":
@@ -71,32 +63,27 @@ class CreerUnTournois:
 
 
                 }
-            
-            Tournois_dict[self.nom] = nouveau_tournoi
-            
-            self.tournois_cree = nouveau_tournoi
 
-            with open(fichier, "r") as fichier_json: 
-                dict_initial_tournois =json.load(fichier_json)
+            return nouveau_tournoi
 
-            dict_initial_tournois["Tournois"].append(Tournois_dict)
-
-            with open(fichier, "w") as fichier_json: 
-                json.dump(dict_initial_tournois, fichier_json, indent=4)
-            
-           
-        
-
-class LancerLeTournois: 
-    def __init__(self) -> None:
+    def lancement_dun_tournois(self):
 
         self.lancer_le_tournois = input("souhaitez-vous lancer le tournois ? (o/n) : ")
+
+        return self.lancer_le_tournois
+            
 
 class DonnerLesResultatsDunTour: 
     "demander à l'utilisateur qui a gagné"
     def __init__(self,paire, numero_de_la_paire) -> None:
+
+        self.paire = paire 
+        self.numero_de_la_paire = numero_de_la_paire
+
+    def recuperer_les_resultats_du_tour(self):
+
         resultat_du_tour = []
-        self.resultat_joueur_un_de_la_paire = input("Pouvez-vous indiquer le résultat du joueur n°1 (" + paire[0] + ") pour le match N°" + str(numero_de_la_paire) + " (W/L/D):" )
+        self.resultat_joueur_un_de_la_paire = input("Pouvez-vous indiquer le résultat du joueur n°1 (" + self.paire[0] + ") pour le match N°" + str(self.numero_de_la_paire) + " (W/L/D):" )
 
         if self.resultat_joueur_un_de_la_paire == "D":
             self.resultat_joueur_deux_de_la_paire = "D"
@@ -110,17 +97,38 @@ class DonnerLesResultatsDunTour:
         resultat_du_tour.append(self.resultat_joueur_deux_de_la_paire)
 
         self.resultat_des_joueurs_sur_le_tour = resultat_du_tour
+
+        return self.resultat_des_joueurs_sur_le_tour
+
+
+
 class DonneesDuTournois: 
 
     def __init__(self, fichier, nom_du_tournoi) -> None:
+        self.fichier = fichier 
+        self.nom_du_tournois = nom_du_tournoi
+
+    def recuperer_les_donnees_du_tournois_a_un_tour_t(self):
+
         self.charger_les_donnees = input("Souhaitez-vous charger les données du tournois ? (o/n) : ")
 
         if self.charger_les_donnees == "o":
-             with open(fichier, "r") as fichier_json: 
+             with open(self.fichier, "r") as fichier_json: 
                 donnee_a_linstant_t = json.load(fichier_json)
 
-             pprint.pprint(donnee_a_linstant_t["Tournois"][-1][nom_du_tournoi])
+             pprint.pprint(donnee_a_linstant_t["Tournois"][self.nom_du_tournoi])
 
-        
+    def recuperation_des_joueurs_dun_tournois(self):
+        self.recuperation_liste_joueurs  = input("Souhaitez-vous récupérer la liste des joueurs ? (o/n) : ")
+    def recuperation_liste_tournois(self):
+        self.recupration_liste_tournois = input("Souhaitez-vous récupérer la liste des tournois ? (o/n) : ")
+    def recuperation_date_et_nom_dun_tournois(self):
+        self.recuperation_date_et_nom_dun_tournois = input("Souhaitez-vous récupérer le nom, la date, la liste des joueurs et des tours d'un match précis ? (o/n) ")
+
+        if self.recuperation_date_et_nom_dun_tournois == "o": 
+            self.numero_du_tournois = input("Veuillez nous indiquer le numéro du tournoi concerné (cf : la liste du dessus) (1,2,3..) : ")
+            self.numero_du_tournois = int(self.numero_du_tournois) - 1
+
+
 
 

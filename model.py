@@ -1,6 +1,25 @@
 import json
 import time
 import random
+import pprint
+
+# faire une class joueur sans s pour faire l'ajout d'un joueur dans le json / faire dans le controler une class qui vérif si un joueur existe
+class Joueur: 
+    "création d'un joueur et ajout du joueur au fichier json"
+    def __init__(self, dict_dinfo_sur_le_joueur_a_ajouter) -> None:
+        self.nouveau_joueur = dict_dinfo_sur_le_joueur_a_ajouter
+
+    def ajout_du_joueur(self, fichier : json):
+
+        with open(fichier, "r") as fichier_json: 
+                dict_initial_joueurs =json.load(fichier_json)
+
+        dict_initial_joueurs["Joueurs"].append(self.nouveau_joueur)
+        print(dict_initial_joueurs)
+
+        with open(fichier, "w") as fichier_json: 
+            json.dump(dict_initial_joueurs, fichier_json, indent=4)
+
 
 class Joueurs:
 
@@ -9,10 +28,13 @@ class Joueurs:
 
     def __init__(self,fichier: json):
 
+        self.fichier = fichier
+
+    def creation_du_dict_de_joueurs_pour_le_tournois(self):
 
         dict_joueurs = {}
        
-        with open(fichier, "r") as fichier_json: 
+        with open(self.fichier, "r") as fichier_json: 
             lecture_json = json.load(fichier_json)
 
         for j in range (len(lecture_json['Joueurs'])):
@@ -35,6 +57,9 @@ class Joueurs:
                 }
             dict_joueurs[self.prenom +"." + self.nom_de_famille[0]] = dict_infos_joueurs
         self.joueurs_vf = dict_joueurs
+
+        return self.joueurs_vf
+    
     
 class Tours : 
     "selection du nombre de tours"
@@ -42,164 +67,158 @@ class Tours :
         self.nombre_de_tours = tours
 
 
-class ClassementJoueurs: 
-    "Classer les joueurs en fonction de leur score"
-    def __init__(self, joueurs_enregistres: dict):
-        
-        cLassement_dict = sorted(joueurs_enregistres, key=lambda x: (joueurs_enregistres[x]["score"]), reverse=True)
-        classement_et_score = {}
-        for joueurs in cLassement_dict: 
-            classement_et_score[joueurs] = joueurs_enregistres[joueurs]["score"]
+class tournoi :
+    def __init__(self, nouveau_tournois_data, fichier) -> None:
 
-        self.classement_tour = classement_et_score
-        
+        self.nouveau_tournois_data = nouveau_tournois_data
+        self.fichier = fichier
 
-class CreationPairesJoueurs: 
-    "creation des paires pour les matchs"
-    def __init__(self, joueurs, tours, liste_des_round):
-        
-        liste_joueurs =[]
+    def ajout_dun_nouveau_tournois(self):
 
-        if type(joueurs) == dict : 
-            keys = joueurs.keys()
-            
+        with open(self.fichier, "r") as fichier_json: 
+            dict_initial_tournois =json.load(fichier_json)
 
-            for key in keys: 
-                liste_joueurs.append(key)
-        else:
-            liste_joueurs = joueurs
-        
-        les_paires = {}
-        c = 0
+        dict_initial_tournois["Tournois"][self.nouveau_tournois_data["nom_du_tournois"]] = (self.nouveau_tournois_data)
 
-        if tours == 1:
-
-            random.shuffle(liste_joueurs)
-            for i in range(int(len(liste_joueurs)/2)) :
-                for j in range(1):
-                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
-                    c = c+2
-        else:
-            for i in range(int(len(liste_joueurs)/2)) :
-                c = 0
-                for j in range(1):
-                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1]
-                    k = 0 
-                    for round in range(len(liste_des_round)) : 
-                        for paire in range (int(len(joueurs)/2)):
-                            nombre_de_paire_identique = 0
-                            if les_paires["Paire N°" + str(i)] == liste_des_round["Round N°" + str(round+1)][2]["Paire N°" + str(paire)] :
-                                nombre_de_paire_identique = nombre_de_paire_identique +1
-                                if nombre_de_paire_identique > 0 and len(liste_joueurs) > 2 and k+1>len(liste_joueurs) :
-                                    k = k +1
-                                    les_paires["Paire N°" + str(i)] = liste_joueurs[c], liste_joueurs[c+1+k]
-                                    round = 0
-                                    paire = 0
-
-                index_du_premier_joueur = liste_joueurs.index(les_paires["Paire N°" + str(i)][0])
-                print(liste_joueurs)
-                del liste_joueurs[index_du_premier_joueur]
-                print(liste_joueurs)
-                index_du_second_joueur = liste_joueurs.index(les_paires["Paire N°" + str(i)][1])
-                del liste_joueurs[index_du_second_joueur]
-                print(liste_joueurs)
-                                         
-        
-        self.paires= les_paires  
-        
-    
-class Matchs:
-    """Définition des classements finaux (tant qu'il n'y a pas de view + stockage des résultats des matchs"""
-    def __init__(self,liste_paires, joueurs_enregistres, resultat_du_tour):
-
-        
-        stockage_des_resultats= []
-        joueur_un = []
-        joueur_deux =[]
-        
-        joueurs_enregistres[liste_paires[0]]["resultatM"] = resultat_du_tour[0]
-        joueurs_enregistres[liste_paires[1]]["resultatM"] = resultat_du_tour[1]
-            
-
-        for i in range(2):
-
-            if joueurs_enregistres[liste_paires[i]]["resultatM"] == "W":
-                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 1
-            elif joueurs_enregistres[liste_paires[i]]["resultatM"] == "L":
-                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 0
-            else: 
-                joueurs_enregistres[liste_paires[i]]["score"] = joueurs_enregistres[liste_paires[i]]["score"] + 0.5
-
-        
-        joueur_un = [liste_paires[0]], [joueurs_enregistres[liste_paires[0]]["score"] ]
-        joueur_deux = [liste_paires[1]], [joueurs_enregistres[liste_paires[1]]["score"] ]
-       
+        with open(self.fichier, "w") as fichier_json: 
+            json.dump(dict_initial_tournois, fichier_json, indent=4)
 
 
-        joueur_et_score =(joueur_un, joueur_deux)
-        stockage_des_resultats.append(joueur_et_score)
-        
-
-        self.tuples_match = stockage_des_resultats
     
 class Tournois: 
 
-    def __init__(self, fichier, tour_actuel, liste_des_tours, liste_des_joueurs_enregistree, nom_du_tournois ):
-        
-        self.numero_tour_actuel = tour_actuel
-        self.liste_des_tours = liste_des_tours
-        self.liste_joueurs_enregistres = liste_des_joueurs_enregistree
+    def __init__(self, fichier, tour_actuel, liste_des_tours, liste_des_joueurs_enregistrees, nom_du_tournois ):
 
-        if  self.numero_tour_actuel == 0 :
+        self.fichier = fichier 
+        self.tour_actuel = tour_actuel
+        self.liste_des_tours = liste_des_tours
+        self.liste_des_joueurs_enregistrees = liste_des_joueurs_enregistrees
+        self.nom_du_tournois = nom_du_tournois
+    
+    def ajout_dun_tournois_dans_le_fichier_json(self):
+
+        if  self.tour_actuel == 0 :
             self.date_debut = time.strftime("%Y-%m-%d %H:%M:%S")
 
-            with open(fichier, "r") as fichier_json:
+            with open(self.fichier, "r") as fichier_json:
                 fichier_infos_tournoi = json.load(fichier_json)
 
-            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["liste_des_joueurs_enregistres"] = liste_des_joueurs_enregistree
-            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["date_de_debut_du_tournois"] = self.date_debut
+            
+            fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["date_de_debut_du_tournois"] = self.date_debut
         
-            with open(fichier, "w") as fichier_json: 
+            with open(self.fichier, "w") as fichier_json: 
                 json.dump(fichier_infos_tournoi, fichier_json, indent=4)
 
-        with open(fichier, "r") as fichier_json:
+        with open(self.fichier, "r") as fichier_json:
                 fichier_infos_tournoi = json.load(fichier_json)
 
-        if int(fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["nombre_de_tours"]) == self.numero_tour_actuel :
+        if int(fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["nombre_de_tours"]) == self.tour_actuel :
 
             self.date_fin= time.strftime("%Y-%m-%d %H:%M:%S")
 
-            with open(fichier, "r") as fichier_json:
+            with open(self.fichier, "r") as fichier_json:
                 fichier_infos_tournoi = json.load(fichier_json)
 
-            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["liste_des_tours"] = self.liste_des_tours
-            fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["date_de_fin_du_tournois"] = self.date_fin
+            fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["liste_des_tours"] = self.liste_des_tours
+            fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["date_de_fin_du_tournois"] = self.date_fin
+            fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["liste_des_joueurs_enregistres"] = self.liste_des_joueurs_enregistrees
 
-            with open(fichier, "w") as fichier_json: 
+            with open(self.fichier, "w") as fichier_json: 
                 json.dump(fichier_infos_tournoi, fichier_json, indent=4)
 
 
-        with open(fichier, "r") as fichier_json:
+        with open(self.fichier, "r") as fichier_json:
                 fichier_infos_tournoi = json.load(fichier_json)
 
-        fichier_infos_tournoi["Tournois"][-1][nom_du_tournois]["numero_tour_actuel"] = self.numero_tour_actuel
+        fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["numero_tour_actuel"] = self.tour_actuel
+        fichier_infos_tournoi["Tournois"][self.nom_du_tournois]["liste_des_joueurs_enregistres"] = self.liste_des_joueurs_enregistrees
 
-        with open(fichier, "w") as fichier_json: 
+        with open(self.fichier, "w") as fichier_json: 
             json.dump(fichier_infos_tournoi, fichier_json, indent=4)
+ 
             
+class ListeDesTournois : 
+    def __init__(self, json_des_tournois, validation_recuperation_tournois) -> None:
+
+        self.json_des_tournois = json_des_tournois
+        self.validation_recuperation_tournois = validation_recuperation_tournois
+
+    def recuperation_liste_des_tournois(self):
+
+        if self.validation_recuperation_tournois == "n":
+            print("vous ne souhaitez pas afficher la liste des tournois")
+        else : 
+            liste_des_tournois = []
+
+            with open(self.json_des_tournois, "r") as fichier_json:
+                dict_tournois = json.load(fichier_json)
 
 
+            keys = dict_tournois["Tournois"].keys()
+
+            for key in keys : 
+                liste_des_tournois.append(key)
+
+            print(liste_des_tournois)
+            self.liste_des_tournois = liste_des_tournois
+
+class RecuperationDuNomEtDateDunTournoiDonne : 
+    def __init__(self, liste_des_tournois, numero_tournois_souhaite, json_des_tournois) -> None:
+
+        self.liste_des_tournois = liste_des_tournois
+        self.numero_tournois_souhaite = numero_tournois_souhaite
+        self.json_des_tournois = json_des_tournois
+    
+    def recuperation_date_et_nom_dun_tournois(self):
         
+        if self.numero_tournois_souhaite == None:
+            print("vous ne souhaitez pas voir la date/le nom d'un tournois donné ? (o/n) : ")
+        if self.numero_tournois_souhaite != None:
+            date_et_nom_dun_tournois = []
+
+            with open(self.json_des_tournois, "r") as fichier_json:
+                dict_tournois = json.load(fichier_json)
+            
+            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["nom_du_tournois"])
+            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["date_de_debut_du_tournois"])
+            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["date_de_fin_du_tournois"])
+
+            print(date_et_nom_dun_tournois)
+    def recuperation_des_joueurs_dun_tournois(self):
+
+        if self.numero_tournois_souhaite == None:
+            pass
+        if self.numero_tournois_souhaite != None:
+
+            liste_des_joueurs_dun_tournoi = []
+
+            with open(self.json_des_tournois, "r") as fichier_json:
+                dict_tournois = json.load(fichier_json)
+
+            Keys = dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_joueurs_enregistres"].keys()
+            
+            for key in Keys :
+                liste_des_joueurs_dun_tournoi.append(key)
+            
+            liste_des_joueurs_dun_tournoi.sort()
+
+            print(liste_des_joueurs_dun_tournoi)
+
+    def recuperation_des_tours_dun_tournois(self):
+        if self.numero_tournois_souhaite == None:
+            pass
+        if self.numero_tournois_souhaite != None:
+            liste_des_tours_dun_tournoi = []
+
+            with open(self.json_des_tournois, "r") as fichier_json:
+                dict_tournois = json.load(fichier_json)
+
+            liste_des_tours_dun_tournoi.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_tours"])  
+
+            pprint.pprint(liste_des_tours_dun_tournoi)
 
 
-"""
-joueurs = Joueurs("joueurs.json").joueurs
-#paires = CreationPairesJoueurs(joueurs).paires
-#tuples_matchs = Matchs(paires,joueurs).tuples_match
-#classement_des_joueurs = ClassementJoueurs(joueurs)
-tours = Tours(joueurs, 6).resultat_final
-print(tours)
-"""
+
 
 
 
