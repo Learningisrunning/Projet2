@@ -3,6 +3,7 @@ import view
 import model
 import time
 import pprint
+import random
 
 
 class ClassementJoueurs: 
@@ -81,17 +82,37 @@ class CreationPairesJoueurs:
         return self.paires 
 
 
-class Matchs:
-    """Définition des classements finaux (tant qu'il n'y a pas de view + stockage des résultats des matchs"""
-    def __init__(self,liste_paires, joueurs_enregistres, resultat_du_tour):
-
+class AjoutDuScore:
+    """ ajout du scores obtenue pendant le tour à chaque joueurs """
+    def __init__(self,liste_paires, joueurs_enregistres):
         self.liste_paires = liste_paires
         self.joueurs_enregistres = joueurs_enregistres
-        self.resultat_du_tour = resultat_du_tour
+        
 
-    def resultats_des_matchs(self):
+    def recuperer_les_resultats_du_tour(self, resultat_joueur_un_de_la_pair):
+        resultat_du_tour =[]
+
+        self.resultat_joueur_un_de_la_paire = resultat_joueur_un_de_la_pair
+
+        if self.resultat_joueur_un_de_la_paire == "D":
+            self.resultat_joueur_deux_de_la_paire = "D"
+        elif self.resultat_joueur_un_de_la_paire == "W":
+            self.resultat_joueur_deux_de_la_paire = "L"
+        else:
+            self.resultat_joueur_deux_de_la_paire = "W"
 
         
+        resultat_du_tour.append(self.resultat_joueur_un_de_la_paire)
+        resultat_du_tour.append(self.resultat_joueur_deux_de_la_paire)
+
+        self.resultat_des_joueurs_sur_le_tour = resultat_du_tour
+
+        return self.resultat_des_joueurs_sur_le_tour
+
+    def resultats_des_matchs(self, resultat_du_tour):
+
+        self.resultat_du_tour = resultat_du_tour
+
         self.stockage_des_resultats= []
         self.joueur_un = []
         self.joueur_deux =[]
@@ -142,109 +163,92 @@ class ListeDesJoueurs:
 
             self.liste_des_joueurs.sort()
 
-            print(self.liste_des_joueurs)
+            return self.liste_des_joueurs
+
+class ListeDesTournois : 
+    def __init__(self, dict_tournois, validation_recuperation_tournois) -> None:
+
+        self.dict_tournois = dict_tournois
+        self.validation_recuperation_tournois = validation_recuperation_tournois
+
+    def recuperation_liste_des_tournois(self):
+
+        if self.validation_recuperation_tournois == "n":
+            print("vous ne souhaitez pas afficher la liste des tournois")
+        else : 
+            liste_des_tournois = []
+
+            keys = self.dict_tournois["Tournois"].keys()
+
+            for key in keys : 
+                liste_des_tournois.append(key)
+
+            return liste_des_tournois
+
+class RecuperationDesDonneesDunTournois : 
+    def __init__(self,dict_de_lecture_du_json_tournois) -> None:
+
+        self.dict_tournois = dict_de_lecture_du_json_tournois
+    
+    def recuperation_donnee_instant_t_tournois(self, validation):
+
+        if validation == "o":
+
+            key = self.dict_tournois["Tournois"].keys()
+            liste_des_cles_des_tournois = []
+            for keys in key:
+                liste_des_cles_des_tournois.append(keys)
+
+            info_du_tournois = self.dict_tournois["Tournois"][liste_des_cles_des_tournois[-1]]
+
+            return info_du_tournois
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-class DeroulementDuProgramme :
-    def __init__(self) -> None:
-
-        view.AjouterUnJoueur("joueurs.json")
-        Liste_des_joueurs_du_tournois = model.Joueurs("joueurs.json").joueurs_vf
-        Recuperation_donnees_du_tournois = view.CreerUnTournois("tournois.json").tournois_cree
-        LancementDuTournoi = view.LancerLeTournois().lancer_le_tournois
-        nombre_de_tours = model.Tours(Recuperation_donnees_du_tournois["nombre_de_tours"]).nombre_de_tours
-
-
-        if LancementDuTournoi == "n": 
-            print("vous ne souhaitez pas lancer le tournois pour le moment")
-            
-        else :
-            model.Tournois("tournois.json", 0, " ", Liste_des_joueurs_du_tournois, Recuperation_donnees_du_tournois["nom_du_tournois"])
-            liste_des_tours = {}
-            for tours in range(int(nombre_de_tours)):
-                self.date_debut_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
-                tours = tours +1
-                print("debut du tours N°" + str(tours))
-                if tours == 1:
-                    Paire_du_tour = model.CreationPairesJoueurs(Liste_des_joueurs_du_tournois,tours, None).paires
-
-                    for nombre_de_paires in range(len(Paire_du_tour)) :
-                        resultat_du_tour = view.DonnerLesResultatsDunTour(Paire_du_tour["Paire N°" + str(nombre_de_paires)], nombre_de_paires ).resultat_des_joueurs_sur_le_tour
-                        match = model.Matchs(Paire_du_tour["Paire N°" + str(nombre_de_paires)], Liste_des_joueurs_du_tournois, resultat_du_tour).tuples_match
-
-                    classement_joueurs = model.ClassementJoueurs(Liste_des_joueurs_du_tournois).classement_tour
-                    self.date_fin_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
-                    liste_des_tours["Round N°" + str(tours)]= self.date_debut_de_tour, self.date_fin_de_tour, Paire_du_tour, classement_joueurs
-                else: 
-
-                    classement_joueurs = model.ClassementJoueurs(Liste_des_joueurs_du_tournois).classement_tour
-                    Paire_du_tour = model.CreationPairesJoueurs(classement_joueurs,tours,liste_des_tours).paires
-
-                    for nombre_de_paires in range(len(Paire_du_tour)) :
-                        resultat_du_tour = view.DonnerLesResultatsDunTour(Paire_du_tour["Paire N°" + str(nombre_de_paires)], nombre_de_paires ).resultat_des_joueurs_sur_le_tour
-                        match = model.Matchs(Paire_du_tour["Paire N°" + str(nombre_de_paires)], Liste_des_joueurs_du_tournois, resultat_du_tour).tuples_match
-        
-                    self.date_fin_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
-                    liste_des_tours["Round N°" + str(tours)]= self.date_debut_de_tour, self.date_fin_de_tour, Paire_du_tour, classement_joueurs
-                model.Tournois("tournois.json", tours, liste_des_tours, Liste_des_joueurs_du_tournois, Recuperation_donnees_du_tournois["nom_du_tournois"])
-                view.DonneesDuTournois("tournois.json",Recuperation_donnees_du_tournois["nom_du_tournois"])
-
-
-            self.resultat_final = classement_joueurs
-            print(self.resultat_final)
-            pprint.pprint(liste_des_tours)
-            
-class RecuperationDeData: 
-    def __init__(self) -> None:
-
-        Liste_des_joueurs_du_tournois = model.Joueurs("joueurs.json").joueurs_vf
-
-        recuperation_des_joueurs = view.RecuperationDesJoueurs().recuperation_liste_joueurs
-
-        model.ListeDesJoueurs(Liste_des_joueurs_du_tournois, recuperation_des_joueurs)
-
-        recuperation_des_tournois = view.RecuperationDesTournois().recupration_liste_tournois     
-        liste_nom_tournois = model.ListeDesTournois("tournois.json",recuperation_des_tournois).liste_des_tournois
-
-        numero_du_tournois = view.RecuperationDateetNomDunTournois().numero_du_tournois
-        model.RecuperationDuNomEtDateDunTournoiDonne(liste_nom_tournois,numero_du_tournois, "tournois.json")
-        model.RecuperationDesJoueursDunTournoi(liste_nom_tournois,numero_du_tournois, "tournois.json")
-        model.RecuperationDesToursDunTournoi(liste_nom_tournois,numero_du_tournois,"tournois.json")
+    def recuperation_date_et_nom_dun_tournois(self,liste_des_tournois, numero_tournois_souhaite):
+        self.numero_tournois_souhaite = numero_tournois_souhaite
         
 
-"""
+        if self.numero_tournois_souhaite == None:
+                print("vous ne souhaitez pas voir la date/le nom d'un tournois donné ? (o/n) : ")
+        if self.numero_tournois_souhaite != None:
+                date_et_nom_dun_tournois = []
+                
+                date_et_nom_dun_tournois.append(self.dict_tournois["Tournois"][liste_des_tournois[self.numero_tournois_souhaite]]["nom_du_tournois"])
+                date_et_nom_dun_tournois.append(self.dict_tournois["Tournois"][liste_des_tournois[self.numero_tournois_souhaite]]["date_de_debut_du_tournois"])
+                date_et_nom_dun_tournois.append(self.dict_tournois["Tournois"][liste_des_tournois[self.numero_tournois_souhaite]]["date_de_fin_du_tournois"])
+
+                return date_et_nom_dun_tournois
+
+    def recuperation_des_joueurs_dun_tournois(self,liste_des_tournois, numero_tournois_souhaite):
+
+            self.numero_tournois_souhaite = numero_tournois_souhaite
+
+            if self.numero_tournois_souhaite == None:
+                pass
+            if self.numero_tournois_souhaite != None:
+
+                liste_des_joueurs_dun_tournoi = []
 
 
+                Keys = self.dict_tournois["Tournois"][liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_joueurs_enregistres"].keys()
+                
+                for key in Keys :
+                    liste_des_joueurs_dun_tournoi.append(key)
+                
+                liste_des_joueurs_dun_tournoi.sort()
+
+                return liste_des_joueurs_dun_tournoi
+
+    def recuperation_des_tours_dun_tournois(self, numero, liste_des_tournois):
+        self.numero_tournois_souhaite = numero
+        self.liste_des_tournois = liste_des_tournois
+        if self.numero_tournois_souhaite == None:
+            pass
+        if self.numero_tournois_souhaite != None:
+            liste_des_tours_dun_tournoi = []
+
+
+            liste_des_tours_dun_tournoi.append(self.dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_tours"])  
+
+            return liste_des_tours_dun_tournoi
 

@@ -63,8 +63,21 @@ class Joueurs:
     
 class Tours : 
     "selection du nombre de tours"
-    def __init__(self,tours = 4) -> None:
-        self.nombre_de_tours = tours
+    def __init__(self,fichier :json) -> None:
+
+        self.fichier = fichier
+    def initialisation_du_nombre_de_tour(self):
+         with open(self.fichier, "r") as fichier_json: 
+            dict_tournois = json.load(fichier_json)
+
+            key = dict_tournois["Tournois"].keys()
+            liste_des_cles_des_tournois = []
+            for keys in key:
+                liste_des_cles_des_tournois.append(keys)
+
+            nombre_de_tours = dict_tournois["Tournois"][liste_des_cles_des_tournois[-1]]["nombre_de_tours"]
+
+            return nombre_de_tours
 
 
 class tournoi :
@@ -87,15 +100,24 @@ class tournoi :
     
 class Tournois: 
 
-    def __init__(self, fichier, tour_actuel, liste_des_tours, liste_des_joueurs_enregistrees, nom_du_tournois ):
+    def __init__(self, fichier, tour_actuel, liste_des_tours, liste_des_joueurs_enregistrees):
 
         self.fichier = fichier 
         self.tour_actuel = tour_actuel
         self.liste_des_tours = liste_des_tours
         self.liste_des_joueurs_enregistrees = liste_des_joueurs_enregistrees
-        self.nom_du_tournois = nom_du_tournois
+
+        with open(self.fichier, "r") as fichier_json: 
+            dict_tournois = json.load(fichier_json)
+
+            key = dict_tournois["Tournois"].keys()
+            liste_des_cles_des_tournois = []
+            for keys in key:
+                liste_des_cles_des_tournois.append(keys)
+
+        self.nom_du_tournois = dict_tournois["Tournois"][liste_des_cles_des_tournois[-1]]["nom_du_tournois"]
     
-    def ajout_dun_tournois_dans_le_fichier_json(self):
+    def ajout_des_donnee_du_tour_dun_tournois_dans_le_fichier_json(self):
 
         if  self.tour_actuel == 0 :
             self.date_debut = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -136,86 +158,14 @@ class Tournois:
         with open(self.fichier, "w") as fichier_json: 
             json.dump(fichier_infos_tournoi, fichier_json, indent=4)
  
-            
-class ListeDesTournois : 
-    def __init__(self, json_des_tournois, validation_recuperation_tournois) -> None:
+def lecture_dun_fichier_json(fichier : json):
 
-        self.json_des_tournois = json_des_tournois
-        self.validation_recuperation_tournois = validation_recuperation_tournois
-
-    def recuperation_liste_des_tournois(self):
-
-        if self.validation_recuperation_tournois == "n":
-            print("vous ne souhaitez pas afficher la liste des tournois")
-        else : 
-            liste_des_tournois = []
-
-            with open(self.json_des_tournois, "r") as fichier_json:
-                dict_tournois = json.load(fichier_json)
+    with open(fichier, "r") as fichier_json: 
+            dict_tournois = json.load(fichier_json)  
+    return dict_tournois
 
 
-            keys = dict_tournois["Tournois"].keys()
 
-            for key in keys : 
-                liste_des_tournois.append(key)
-
-            print(liste_des_tournois)
-            self.liste_des_tournois = liste_des_tournois
-
-class RecuperationDuNomEtDateDunTournoiDonne : 
-    def __init__(self, liste_des_tournois, numero_tournois_souhaite, json_des_tournois) -> None:
-
-        self.liste_des_tournois = liste_des_tournois
-        self.numero_tournois_souhaite = numero_tournois_souhaite
-        self.json_des_tournois = json_des_tournois
-    
-    def recuperation_date_et_nom_dun_tournois(self):
-        
-        if self.numero_tournois_souhaite == None:
-            print("vous ne souhaitez pas voir la date/le nom d'un tournois donné ? (o/n) : ")
-        if self.numero_tournois_souhaite != None:
-            date_et_nom_dun_tournois = []
-
-            with open(self.json_des_tournois, "r") as fichier_json:
-                dict_tournois = json.load(fichier_json)
-            
-            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["nom_du_tournois"])
-            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["date_de_debut_du_tournois"])
-            date_et_nom_dun_tournois.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["date_de_fin_du_tournois"])
-
-            print(date_et_nom_dun_tournois)
-    def recuperation_des_joueurs_dun_tournois(self):
-
-        if self.numero_tournois_souhaite == None:
-            pass
-        if self.numero_tournois_souhaite != None:
-
-            liste_des_joueurs_dun_tournoi = []
-
-            with open(self.json_des_tournois, "r") as fichier_json:
-                dict_tournois = json.load(fichier_json)
-
-            Keys = dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_joueurs_enregistres"].keys()
-            
-            for key in Keys :
-                liste_des_joueurs_dun_tournoi.append(key)
-            
-            liste_des_joueurs_dun_tournoi.sort()
-
-            print(liste_des_joueurs_dun_tournoi)
-
-    def recuperation_des_tours_dun_tournois(self):
-        if self.numero_tournois_souhaite == None:
-            pass
-        if self.numero_tournois_souhaite != None:
-            liste_des_tours_dun_tournoi = []
-
-            with open(self.json_des_tournois, "r") as fichier_json:
-                dict_tournois = json.load(fichier_json)
-
-            liste_des_tours_dun_tournoi.append(dict_tournois["Tournois"][self.liste_des_tournois[self.numero_tournois_souhaite]]["liste_des_tours"])  
-
-            pprint.pprint(liste_des_tours_dun_tournoi)
 
 
 

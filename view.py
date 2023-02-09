@@ -81,54 +81,43 @@ class DonnerLesResultatsDunTour:
         self.numero_de_la_paire = numero_de_la_paire
 
     def recuperer_les_resultats_du_tour(self):
-
-        resultat_du_tour = []
+        
         self.resultat_joueur_un_de_la_paire = input("Pouvez-vous indiquer le résultat du joueur n°1 (" + self.paire[0] + ") pour le match N°" + str(self.numero_de_la_paire) + " (W/L/D):" )
 
-        if self.resultat_joueur_un_de_la_paire == "D":
-            self.resultat_joueur_deux_de_la_paire = "D"
-        elif self.resultat_joueur_un_de_la_paire == "W":
-            self.resultat_joueur_deux_de_la_paire = "L"
-        else:
-            self.resultat_joueur_deux_de_la_paire = "W"
-
-        
-        resultat_du_tour.append(self.resultat_joueur_un_de_la_paire)
-        resultat_du_tour.append(self.resultat_joueur_deux_de_la_paire)
-
-        self.resultat_des_joueurs_sur_le_tour = resultat_du_tour
-
-        return self.resultat_des_joueurs_sur_le_tour
-
+        return self.resultat_joueur_un_de_la_paire
 
 
 class DonneesDuTournois: 
 
-    def __init__(self, fichier, nom_du_tournoi) -> None:
+
+    def __init__(self, fichier) -> None:
         self.fichier = fichier 
-        self.nom_du_tournois = nom_du_tournoi
 
     def recuperer_les_donnees_du_tournois_a_un_tour_t(self):
 
-        self.charger_les_donnees = input("Souhaitez-vous charger les données du tournois ? (o/n) : ")
+        charger_les_donnees = input("Souhaitez-vous charger les données du tournois ? (o/n) : ")
 
-        if self.charger_les_donnees == "o":
-             with open(self.fichier, "r") as fichier_json: 
-                donnee_a_linstant_t = json.load(fichier_json)
-
-             pprint.pprint(donnee_a_linstant_t["Tournois"][self.nom_du_tournoi])
+        return charger_les_donnees
 
     def recuperation_des_joueurs_dun_tournois(self):
-        self.recuperation_liste_joueurs  = input("Souhaitez-vous récupérer la liste des joueurs ? (o/n) : ")
+        recuperation_liste_joueurs  = input("Souhaitez-vous récupérer la liste des joueurs ? (o/n) : ")
+        return recuperation_liste_joueurs
     def recuperation_liste_tournois(self):
-        self.recupration_liste_tournois = input("Souhaitez-vous récupérer la liste des tournois ? (o/n) : ")
+        recupration_liste_tournois = input("Souhaitez-vous récupérer la liste des tournois ? (o/n) : ")
+        return recupration_liste_tournois
     def recuperation_date_et_nom_dun_tournois(self):
-        self.recuperation_date_et_nom_dun_tournois = input("Souhaitez-vous récupérer le nom, la date, la liste des joueurs et des tours d'un match précis ? (o/n) ")
+        recuperation_date_et_nom_dun_tournois = input("Souhaitez-vous récupérer le nom, la date, la liste des joueurs et des tours d'un match précis ? (o/n) ")
 
-        if self.recuperation_date_et_nom_dun_tournois == "o": 
-            self.numero_du_tournois = input("Veuillez nous indiquer le numéro du tournoi concerné (cf : la liste du dessus) (1,2,3..) : ")
-            self.numero_du_tournois = int(self.numero_du_tournois) - 1
+        if recuperation_date_et_nom_dun_tournois == "o": 
+            numero_du_tournois = input("Veuillez nous indiquer le numéro du tournoi concerné (cf : la liste du dessus) (1,2,3..) : ")
+            numero_du_tournois = int(numero_du_tournois) - 1
+        
+        return numero_du_tournois
 
 
+def affichage_des_donnees(data):
+    pprint.pprint(data)
 
+def affichage_des_donnees_en_liste(data):
+    print(data)
 
