@@ -15,11 +15,16 @@ class main:
 
     def deroulement_du_programme(self):
         #ajout d'un joueur
-
+        dict_des_joueurs = model.lecture_dun_fichier_json(self.liste_de_joueurs)
         ajout_dun_joueur = view.AjouterUnJoueur().volonte_dajouter_un_joueur()
         while ajout_dun_joueur == "o":
             nouveau_joueur = view.AjouterUnJoueur().recuperation_infos_nouveau_joueur(ajout_dun_joueur)
-            model.Joueur(nouveau_joueur).ajout_du_joueur(self.liste_de_joueurs)
+            verif = controler.VerifDoublonJoueurs().verif_du_doublon(dict_des_joueurs, nouveau_joueur)
+            if verif == True:
+                model.Joueur(nouveau_joueur).ajout_du_joueur(self.liste_de_joueurs)
+            else:
+                print("joueur déjà enregistré")
+
             ajout_dun_joueur = view.AjouterUnJoueur().volonte_dajouter_un_joueur()
 
         #ajout d'un tournois   

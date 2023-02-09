@@ -6,6 +6,21 @@ import pprint
 import random
 
 
+class VerifDoublonJoueurs:
+
+    def verif_du_doublon(self, dict_des_joueurs, nouveau_joueur):
+
+        nouvelle_identifiant_echec = nouveau_joueur["identifiant_national_dechec"]
+
+        verification = bool
+        for nb_joueurs in range(len(dict_des_joueurs["Joueurs"])):
+            identifiants = dict_des_joueurs["Joueurs"][nb_joueurs]["identifiant_national_dechec"]
+            if nouvelle_identifiant_echec == identifiants:
+                verification = False
+                break
+            else: 
+                verification = True
+
 class ClassementJoueurs: 
     "Classer les joueurs en fonction de leur score"
     def __init__(self, joueurs_enregistres: dict):
