@@ -1,4 +1,3 @@
-import json
 import pprint
 Tournois_dict = {}
 

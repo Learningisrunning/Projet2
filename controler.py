@@ -1,8 +1,3 @@
-import json
-import view 
-import model
-import time
-import pprint
 import random
 
 #diviser en package + flack 8 + commenter un peu plus mon code + résoudre le pb des infos pendant le tournois 
@@ -162,6 +157,7 @@ class AjoutDuScore:
         return self.tuples_match 
 
 class ListeDesJoueurs:
+    """Récuperation et tri des joueurs du tournois"""
     def __init__(self, joueurs, validation_recuperation_joueur) -> None:
 
         self.joueurs = joueurs 
@@ -184,6 +180,7 @@ class ListeDesJoueurs:
             return self.liste_des_joueurs
 
 class ListeDesTournois : 
+    """Récuperation et tri des tournois"""
     def __init__(self, dict_tournois, validation_recuperation_tournois) -> None:
 
         self.dict_tournois = dict_tournois
