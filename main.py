@@ -41,7 +41,9 @@ class main:
         #Déroulement d'un tour
         model.Tournois(self.liste_de_tournois, 0," ", self.joueurs_du_tournois).ajout_des_donnee_du_tour_dun_tournois_dans_le_fichier_json()
         liste_des_tours ={}
+        
         for tours_actuel in range(int(nombre_de_tours)):
+           
             self.date_debut_de_tour = time.strftime("%Y-%m-%d %H:%M:%S")
             tours_actuel = tours_actuel +1 
             if tours_actuel == 1:
@@ -69,7 +71,8 @@ class main:
             model.Tournois(self.liste_de_tournois, tours_actuel,liste_des_tours, self.joueurs_du_tournois).ajout_des_donnee_du_tour_dun_tournois_dans_le_fichier_json()
             recuperer_les_donnees = view.DonneesDuTournois(self.liste_de_tournois).recuperer_les_donnees_du_tournois_a_un_tour_t()
             if recuperer_les_donnees == "o":
-                Donnees_au_tour_t = model.RecuperationDesDonneesDunTournois(self.liste_de_tournois).recuperation_donnee_instant_t_tournois(recuperer_les_donnees)
+                dict_des_tournois = model.lecture_dun_fichier_json(self.liste_de_tournois)
+                Donnees_au_tour_t = controler.RecuperationDesDonneesDunTournois(dict_des_tournois).recuperation_donnee_instant_t_tournois(recuperer_les_donnees)
                 view.affichage_des_donnees(Donnees_au_tour_t)
 
 
@@ -99,8 +102,7 @@ class main:
         
 
 
-
-                
+      
 
 
         

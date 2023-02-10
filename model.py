@@ -1,9 +1,7 @@
 import json
 import time
-import random
-import pprint
 
-# faire une class joueur sans s pour faire l'ajout d'un joueur dans le json / faire dans le controler une class qui vérif si un joueur existe
+
 class Joueur: 
     "création d'un joueur et ajout du joueur au fichier json"
     def __init__(self, dict_dinfo_sur_le_joueur_a_ajouter) -> None:

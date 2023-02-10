@@ -5,6 +5,7 @@ import time
 import pprint
 import random
 
+#diviser en package + flack 8 + commenter un peu plus mon code + résoudre le pb des infos pendant le tournois 
 
 class VerifDoublonJoueurs:
 
@@ -20,6 +21,8 @@ class VerifDoublonJoueurs:
                 break
             else: 
                 verification = True
+
+        return verification
 
 class ClassementJoueurs: 
     "Classer les joueurs en fonction de leur score"
@@ -208,6 +211,7 @@ class RecuperationDesDonneesDunTournois :
     def recuperation_donnee_instant_t_tournois(self, validation):
 
         if validation == "o":
+
 
             key = self.dict_tournois["Tournois"].keys()
             liste_des_cles_des_tournois = []
