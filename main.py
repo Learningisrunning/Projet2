@@ -1,23 +1,21 @@
 import time
 import controler
-import model
 import view
+from model_package import (Joueur, Joueurs,
+                           lecture_dun_fichier_json, Tournoi, Tours, Tournois)
 
 
 class Main:
     """Phase d'inialisation du tournois puis déroulement du tournois"""
-
     def __init__(self, liste_de_joueurs, liste_de_tournois) -> None:
         self.liste_de_joueurs = liste_de_joueurs
         self.liste_de_tournois = liste_de_tournois
 
     def deroulement_du_programme(self):
         """ajout d'un joueur"""
-
-        dict_des_joueurs = model.lecture_dun_fichier_json(
+        dict_des_joueurs = lecture_dun_fichier_json.lecture_dun_fichier_json(
             self.liste_de_joueurs)
         ajout_dun_joueur = view.AjouterUnJoueur().volonte_dajouter_un_joueur()
-
         while ajout_dun_joueur == "o":
             nouveau_joueur = (view.AjouterUnJoueur().
                               recuperation_infos_nouveau_joueur(
@@ -27,7 +25,7 @@ class Main:
                      verif_du_doublon(dict_des_joueurs, nouveau_joueur))
 
             if verif is True:
-                model.Joueur(nouveau_joueur).ajout_du_joueur(
+                Joueur.Joueur(nouveau_joueur).ajout_du_joueur(
                     self.liste_de_joueurs)
             else:
                 print("joueur déjà enregistré")
@@ -40,22 +38,25 @@ class Main:
         nouveau_tournoi = (view.CreerUnTournois().
                            recuperation_info_nouveau_tournois())
 
-        (model.Tournoi(nouveau_tournoi,
-                       self.liste_de_tournois).ajout_dun_nouveau_tournois())
+        (Tournoi.Tournoi(nouveau_tournoi,
+                         self.liste_de_tournois).ajout_dun_nouveau_tournois())
 
         """creation de la list des joueurs du tournoi"""
 
-        joueurs_du_tournois = (model.Joueurs(self.liste_de_joueurs).
+        joueurs_du_tournois = (Joueurs.Joueurs(self.liste_de_joueurs).
                                creation_du_dict_de_joueurs_pour_le_tournois())
 
         """initialisation du nombre de tours"""
 
-        nombre_de_tours = (model.Tours(self.liste_de_tournois).
+        nombre_de_tours = (Tours.Tours(self.liste_de_tournois).
                            initialisation_du_nombre_de_tour())
 
         """Déroulement d'un tour"""
 
-        (model.Tournois(self.liste_de_tournois, 0, " ", joueurs_du_tournois).
+        (Tournois.Tournois(self.liste_de_tournois,
+                           0,
+                           " ",
+                           joueurs_du_tournois).
          ajout_des_donnee_du_tour_dun_tournois_dans_le_fichier_json())
 
         liste_des_tours = {}
@@ -157,10 +158,10 @@ class Main:
                     paires_du_tour,
                     classement_des_joueurs)
 
-            (model.Tournois(self.liste_de_tournois,
-                            tours_actuel,
-                            liste_des_tours,
-                            joueurs_du_tournois).
+            (Tournois.Tournois(self.liste_de_tournois,
+                               tours_actuel,
+                               liste_des_tours,
+                               joueurs_du_tournois).
              ajout_des_donnee_du_tour_dun_tournois_dans_le_fichier_json())
 
             recuperer_les_donnees = (
@@ -171,8 +172,9 @@ class Main:
 
             if recuperer_les_donnees == "o":
 
-                dict_des_tournois = model.lecture_dun_fichier_json(
-                    self.liste_de_tournois)
+                dict_des_tournois = (lecture_dun_fichier_json.
+                                     lecture_dun_fichier_json(
+                                      self.liste_de_tournois))
 
                 donnees_au_tour_t = (
                     controler.RecuperationDesDonneesDunTournois(
@@ -188,7 +190,8 @@ class Main:
 
         """Récuperation des différentes données"""
 
-        dict_tournois = model.lecture_dun_fichier_json(self.liste_de_tournois)
+        dict_tournois = (lecture_dun_fichier_json.
+                         lecture_dun_fichier_json(self.liste_de_tournois))
 
         """affichage de la liste des joueurs du tournoi"""
 
